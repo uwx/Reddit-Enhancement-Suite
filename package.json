@@ -30,6 +30,7 @@
     "lint-fix": "eslint . --fix; stylelint lib/**/*.scss --fix;",
     "flow": "flow",
     "test": "cross-env NODE_ENV=test ava",
+    "coverage": "cross-env NODE_ENV=test nyc --reporter=text --reporter=lcov ava",
     "integration-only": "nightwatch --env",
     "preintegration": "yarn build --env browsers=chrome,firefox",
     "integration": "yarn integration-only",
