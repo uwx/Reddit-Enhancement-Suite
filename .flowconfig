@@ -16,13 +16,8 @@ module.use_strict=true
 module.name_mapper='^sibling-loader\(\?.+\)?!.+$'->'<PROJECT_ROOT>/flow/stub/sibling-loader.js'
 module.name_mapper='^exec-loader\(\?cache\)?!\(.+\)$'->'\2'
 
-esproposal.export_star_as=enable
-esproposal.optional_chaining=enable
-
 suppress_type=$FlowIssue
 suppress_type=$FlowIgnore
-suppress_comment=\\(.\\|\n\\)*\\$FlowIssue
-suppress_comment=\\(.\\|\n\\)*\\$FlowIgnore
 
 [version]
-0.84.0
+0.221.0

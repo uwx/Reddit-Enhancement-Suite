@@ -7,16 +7,8 @@
 		"dollar-sign",
 		"no-useless-assign",
 		"prefer-spread",
-		"filenames",
-		"import"
+		"filenames"
 	],
-	"settings": {
-		"import/ignore": [
-			"node_modules",
-			"\\.(json|png|gif|html|scss)$"
-		],
-		"import/resolver": "webpack"
-	},
 	"env": {
 		"browser": true,
 		"node": true,
@@ -55,50 +47,6 @@
 
 		"filenames/match-exported": 2,
 
-		"import/no-restricted-paths": [2, { "zones": [
-			{ "target": "./lib/core", "from": "./lib/modules" },
-			{ "target": "./lib/environment", "from": "./lib/modules" },
-			{ "target": "./lib/environment", "from": "./lib/core" },
-			{ "target": "./lib/utils", "from": "./lib/modules" },
-			{ "target": "./lib/utils", "from": "./lib/core" },
-			{ "target": "./lib/vendor", "from": "./lib/modules" },
-			{ "target": "./lib/vendor", "from": "./lib/core" }
-		] }],
-		"import/default": 2,
-		"import/dynamic-import-chunkname": 2,
-		"import/exports-last": 0,
-		"import/extensions": [2, { "js": "never", "json": "always" }],
-		"import/first": 2,
-		"import/group-exports": 0,
-		"import/imports-first": 2,
-		"import/max-dependencies": 0,
-		"import/newline-after-import": 2,
-		"import/no-absolute-path": 2,
-		"import/no-amd": 2,
-		"import/no-anonymous-default-export": 0,
-		"import/no-commonjs": 2,
-		"import/no-cycle": 0,
-		"import/no-default-export": 0,
-		"import/no-deprecated": 2,
-		"import/no-duplicates": 2,
-		"import/no-dynamic-require": 0,
-		"import/no-extraneous-dependencies": 2,
-		"import/no-internal-modules": 0,
-		"import/no-mutable-exports": 0,
-		"import/no-named-as-default": 2,
-		"import/no-named-as-default-member": 2,
-		"import/no-named-default": 2,
-		"import/no-namespace": 0,
-		"import/no-nodejs-modules": 2,
-		"import/no-self-import": 2,
-		"import/no-unassigned-import": 0,
-		"import/no-unresolved": 2,
-		"import/no-useless-path-segments": 0,
-		"import/no-webpack-loader-syntax": 0,
-		"import/order": 2,
-		"import/prefer-default-export": 0,
-		"import/unambiguous": 0,
-
 		"no-alert": 0,
 		"no-bitwise": 0,
 		"no-case-declarations": 0,
@@ -109,7 +57,7 @@
 		"no-duplicate-imports": 0, // see import/no-duplicates (ESLint's rule doesn't handle Flow `import type`)
 		"no-else-return": 0,
 		"no-empty-function": [2, { "allow": ["arrowFunctions", "methods"] }],
-		"no-extra-parens": [2, "functions"], // "all" conflicts with no-return-assign and some other rules, unfortunately
+		// "no-extra-parens": [2, "functions"], // "all" conflicts with no-return-assign and some other rules, unfortunately
 		"no-implicit-coercion": [0, { "boolean": false }],
 		"no-inline-comments": 0,
 		"no-inner-declarations": 0, // ES6 has block-scoped functions
