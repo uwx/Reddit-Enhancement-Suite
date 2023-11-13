@@ -1,4 +1,33 @@
-# Reddit Enhancement Suite
+# Janky MV3 RES Fork
+
+Forked from honestbleeps/Reddit-Enhancement-Suite, including:
+
+* Convert codebase from Flow to TypeScript
+* Upgrade from Webpack 4 to 5
+* Get rid of Babel for bundling, use esbuild instead
+* Merge branch honestbleeps/Reddit-Enhancement-Suite/ghact
+* Merge PR honestbleeps/Reddit-Enhancement-Suite/5475
+* Merge PR honestbleeps/Reddit-Enhancement-Suite/5482
+* Merge PR honestbleeps/Reddit-Enhancement-Suite/5481
+* Merge PR honestbleeps/Reddit-Enhancement-Suite/5480
+* Merge PR honestbleeps/Reddit-Enhancement-Suite/5479
+* Merge PR honestbleeps/Reddit-Enhancement-Suite/5478
+* Merge PR honestbleeps/Reddit-Enhancement-Suite/5476
+* Merge PR honestbleeps/Reddit-Enhancement-Suite/5453
+* Merge branch honestbleeps/Reddit-Enhancement-Suite/dependabot/npm_and_yarn/postcss-8.4.31
+* Merge branch honestbleeps/Reddit-Enhancement-Suite/dependabot/npm_and_yarn/babel/traverse-7.23.2
+* Merge branch honestbleeps/Reddit-Enhancement-Suite/dependabot/npm_and_yarn/browserify-sign-4.2.2
+* Merge PR honestbleeps/Reddit-Enhancement-Suite/5403
+
+## What works
+
+* You tell me
+
+## What doesn't work
+
+* Message passing between background and foreground script
+
+# Original readme
 
 [![RES Pipeline](https://github.com/honestbleeps/Reddit-Enhancement-Suite/actions/workflows/pipeline.yml/badge.svg)](https://github.com/honestbleeps/Reddit-Enhancement-Suite/actions/workflows/pipeline.yml)
 [![Chat on Discord](https://img.shields.io/discord/681993947085799490?label=Discord)](https://discord.gg/UzkFNNa)
