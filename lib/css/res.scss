@@ -593,7 +593,7 @@ span.multi-count {
 
 .builderTrailingControls {
 	margin-left: auto !important;
-	~ & { margin-left: initial !important; }
+	* ~ & { margin-left: initial !important; }
 
 	.builderBlock[data-type='group'] + & {
 		position: absolute; // Avoids the delete button taking vertical space, shriking the recursive block

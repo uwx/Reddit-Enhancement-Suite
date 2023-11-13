@@ -1,0 +1,42 @@
+import { Case } from "../Case";
+import { numericalCompare, prettyOperator, inverseOperator } from "../../../utils";
+export class Depth extends Case {
+  static text = 'Comment depth';
+
+  static parseCriterion(input: any) {
+    return {
+      op: '==',
+      val: parseInt(input, 10)
+    };
+  }
+
+  static thingToCriterion(thing: any) {
+    return String(thing.getParents().length);
+  }
+
+  static defaultConditions = {
+    op: '>',
+    val: 0
+  };
+  static fields = ['comment\'s depth ', {
+    type: 'select',
+    options: 'COMPARISON',
+    id: 'op'
+  }, ' ', {
+    type: 'number',
+    id: 'val'
+  }];
+  static pattern = 'integer';
+  trueText = `depth ${prettyOperator(this.conditions.op)} ${this.conditions.val}`;
+  falseText = `depth ${prettyOperator(inverseOperator(this.conditions.op))} ${this.conditions.val}`;
+
+  isValid() {
+    return this.value.val >= 0;
+  }
+
+  evaluate(thing: any) {
+    const depth = thing.getParents().length;
+    return numericalCompare(this.value.op, depth, this.value.val);
+  }
+
+}

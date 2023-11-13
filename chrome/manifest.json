@@ -21,7 +21,7 @@
 		"open_in_tab": true
 	},
 	"background": {
-		"service_worker": "{{../lib/background.entry.js}}"
+		"service_worker": "{{../lib/background.entry.ts}}"
 	},
 	"content_scripts": [{
 		"matches": [
@@ -51,7 +51,7 @@
 			"https://*.reddit.com/*.json-html?*"
 		],
 		"js": [
-			"{{../lib/foreground.entry.js}}"
+			"{{../lib/foreground.entry.ts}}"
 		],
 		"css": [
 			"{{../lib/css/res.scss}}"
@@ -96,8 +96,9 @@
         {
             "resources": [
 				"{{../lib/environment/background/permissions/prompt.html}}",
-				"{{../lib/environment/background/permissions/prompt.entry.js}}",
-				"{{../lib/options/options.html}}*"
+				"{{../lib/environment/background/permissions/prompt.entry.ts}}",
+				"{{../lib/options/options.html}}*",
+				"*.js.map"
             ],
             "matches": ["https://*.reddit.com/*"]
         }

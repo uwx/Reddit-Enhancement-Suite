@@ -21,60 +21,77 @@ type Parameters<T extends (...args: any) => any> = T extends (...args: infer P) 
  */
 
 // Executes the given module's src in a fake context in order to get the resulting string.
-const a = /** @satisfies {import('webpack').LoaderDefinition} */ ({ pitch(content, prev, data) {
-	const callback = this.async();
+const a = /** @satisfies {import('webpack').LoaderDefinition} */ ({
+	pitch(content, prev, data) {
+		const callback = this.async();
 
-	const query = this.getOptions() ?? {};
-	const nodeRequireRegex = query.resolve && new RegExp(query.resolve, 'i');
+		const query = /** @type {{ postProcess: (args: unknown) => (string | Promise<string>) }} */ (this.getOptions() ?? {});
 
-	this.getLogger().error('hiiii ' + content);
+		// const nodeRequireRegex = query.resolve && new RegExp(query.resolve, 'i');
 
-	const dependencies = [];
-	// run root module, importing some resources synchronously with node require
-	// and returning the placeholder for others
-	const moduleWithPlaceholders = runScript(content, this.resourcePath, {
-		require: (/** @type {string} */ resourcePath) => {
-			if (nodeRequireRegex && nodeRequireRegex.test(resourcePath)) {
-				// evaluate the required file with node's require
-				const absPath = path.resolve(path.dirname(this.resourcePath), resourcePath);
-				return require(absPath);
-			} else {
-				// evaluate the required file with webpack's require, interpolate the result later
-				dependencies.push(new Promise((resolve, reject) => {
-					// load the module with webpack's internal module loader
-					this.loadModule(resourcePath, (err, src) => {
-						if (err) {
-							return reject(err);
-						}
-						try {
-							// run the imported module to get its (string) export
-							const result = runScript(src, resourcePath, {
-								__webpack_public_path__: this._compilation.options.output.publicPath !== 'auto' && this._compilation.options.output.publicPath || '',
-							});
-							this.getLogger().warn(src, util.inspect(result));
-							resolve(result);
-						} catch (e) {
-							reject(e);
-						}
+		// this.getLogger().error('hiiii ' + content);
+
+		// run root module, importing some resources synchronously with node require
+		// and returning the placeholder for others
+
+		(async () => {
+			/** @type {Map<string, any>} */
+			const loadedDeps = new Map();
+
+			/** @type {any} */
+			let moduleWithPlaceholders;
+			let i = 0;
+			// eslint-disable-next-line no-constant-condition
+			while (true) {
+				/** @type {string[]} */
+				const requests = [];
+				/** @type {Promise<string>[]} */
+				const dependencies = [];
+
+				let error1 = false;
+				try {
+					moduleWithPlaceholders = runScript(content, this.resourcePath, {
+						require: (/** @type {string} */ request) => {
+							const cached = loadedDeps.get(request);
+							if (cached) {
+								return cached;
+							}
+
+							requests.push(request);
+							// evaluate the required file with webpack's require, interpolate the result later
+							dependencies.push(this.importModule(request, {
+								baseUri: path.dirname(this.resourcePath),
+							}));
+							return placeholder;
+						},
 					});
-				}));
+				} catch (error) {
+					if (i++ > 10) throw error;
+					error1 = true;
+				}
 
-				return placeholder;
+				// eslint-disable-next-line no-await-in-loop
+				const results = await Promise.all(dependencies);
+
+				// eslint-disable-next-line no-restricted-syntax
+				for (let i = 0; i < requests.length; i++) {
+					loadedDeps.set(requests[i], results[i]);
+				}
+
+				if (!error1) {
+					// interpolate the results into the root module's placeholders
+					// eslint-disable-next-line no-await-in-loop
+					if (query.postProcess) moduleWithPlaceholders = await query.postProcess(moduleWithPlaceholders);
+
+					// eslint-disable-next-line no-useless-assign/no-useless-assign
+					moduleWithPlaceholders = moduleWithPlaceholders.replace(new RegExp(placeholder, 'g'), () => results.shift());
+
+					return moduleWithPlaceholders;
+				}
 			}
-		},
-	});
-
-	Promise.all(dependencies)
-		.then(results =>
-			// interpolate the results into the root module's placeholders
-			 moduleWithPlaceholders.replace(new RegExp(placeholder, 'g'), () => results.shift()),
-		)
-		.then(content => {
-			callback(null, content);
-		}, err => {
-			callback(new Error(''+err+'\n'+err.stack));
-		});
-} });
+		})().then(e => callback(null, e), e => callback(e));
+	},
+});
 
 // Executes the given CommonJS module in a fake context to get the exported string.
 // The given module is expected to just return a string without requiring further modules.
@@ -92,6 +109,7 @@ function runScript(src, filename, context) {
 		module: {
 			exports: {},
 		},
+		exports: undefined,
 		...context,
 	};
 	sandbox.exports = sandbox.module.exports;
