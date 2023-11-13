@@ -12,80 +12,145 @@ jobs:
   lint_flow:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
       with:
-        node-version: '12.x'
-    - run: yarn install --frozen-lockfile
+        node-version: '20.x'
+    - run: pnpm install --frozen-lockfile
 
-    - run: yarn flow check --show-all-errors
-    - run: yarn eslint
-    - run: yarn sass-lint
-    - run: yarn i18n-lint
+    #- run: pnpm flow check --show-all-errors
+    - run: pnpm run eslint
+    - run: pnpm run sass-lint
+    - run: pnpm run i18n-lint
 
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
       with:
-        node-version: '12.x'
-    - run: yarn install --frozen-lockfile
+        node-version: '20.x'
+    - run: pnpm install --frozen-lockfile
 
-    - run: yarn coverage
+    - run: pnpm coverage
     - uses: coverallsapp/github-action@v1.0.1
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-    - run: yarn integration chrome --retries 2 && yarn integration-only firefox --retries 2
-      env:
-        SAUCE_USERNAME: RES-Auto
-        SELENIUM_HOST: ondemand.saucelabs.com
-        SELENIUM_PORT: 80
-        SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+        github-token: ${{ github.token }}
+
+  build:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm build --env browsers=all
 
   build_deploy:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
       with:
-        node-version: '12.x'
-    - run: yarn install --frozen-lockfile
+        node-version: '20.x'
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm build --env browsers=all
 
-    - run: yarn build all
-
-    - uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
+    #- uses: softprops/action-gh-release@v1
+    #  if: startsWith(github.ref, 'refs/tags/')
+    #  with:
+    #    files: |
+    #      dist/zip/chrome.zip
+    #      dist/zip/chrome-beta.zip
+    #      dist/zip/firefox.zip
+    #      dist/zip/firefox-beta.zip
+    #    prerelease: true
+    #  env:
+    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #- run: ./build/travisDeploy.sh
+    #  if: startsWith(github.ref, 'refs/tags/')
+    #  env:
+    #    CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+    #    CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+    #    CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+    #    FIREFOX_ISSUER: ${{ secrets.FIREFOX_ISSUER }}
+    #    FIREFOX_SECRET: ${{ secrets.FIREFOX_SECRET }}
+    #    OPERA_USER: ${{ secrets.OPERA_USER }}
+    #    OPERA_PASSWORD: ${{ secrets.OPERA_PASSWORD }}
+    #    BOT_USER: Reddit-Enhancement-Suite-Bot
+    #    BOT_PASSWORD: ${{ secrets.BOT_PASSWORD }}
+    - name: Create Release
+      # You may pin to the exact commit or the version.
+      # uses: ncipollo/release-action@a2e71bdd4e7dab70ca26a852f29600c98b33153e
+      uses: ncipollo/release-action@v1.13.0
       with:
-        files: |
-          dist/zip/chrome.zip
-          dist/zip/chrome-beta.zip
-          dist/zip/firefox.zip
-          dist/zip/firefox-beta.zip
-        prerelease: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: ./build/travisDeploy.sh
-      if: startsWith(github.ref, 'refs/tags/')
-      env:
-        CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
-        CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
-        CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
-        FIREFOX_ISSUER: ${{ secrets.FIREFOX_ISSUER }}
-        FIREFOX_SECRET: ${{ secrets.FIREFOX_SECRET }}
-        OPERA_USER: ${{ secrets.OPERA_USER }}
-        OPERA_PASSWORD: ${{ secrets.OPERA_PASSWORD }}
-        BOT_USER: Reddit-Enhancement-Suite-Bot
-        BOT_PASSWORD: ${{ secrets.BOT_PASSWORD }}
+        # An optional flag which indicates if we should update a release if it already exists. Defaults to false.
+        allowUpdates: true # optional, default is
+        # An optional flag which indicates if artifact read or upload errors should fail the build.
+        artifactErrorsFailBuild: false # optional, default is
+        # An optional set of paths representing artifacts to upload to the release. This may be a single path or a comma delimited list of paths (or globs)
+        artifacts: dist/zip/chrome.zip,dist/zip/chrome-beta.zip,dist/zip/firefox.zip,dist/zip/firefox-beta.zip
+        # The content type of the artifact. Defaults to raw
+        artifactContentType: raw # optional, default is
+        # An optional body for the release.
+        # body: # optional, default is
+        # An optional body file for the release. This should be the path to the file
+        # bodyFile: # optional, default is
+        # An optional commit reference. This will be used to create the tag if it does not exist.
+        commit: ${{github.sha}} # optional, default is
+        # When provided this will generate a discussion of the specified category. The category must exist otherwise this will cause the action to fail. This isn't used with draft releases
+        # discussionCategory: # optional, default is
+        # Optionally marks this release as a draft release. Set to true to enable.
+        draft: false # optional, default is
+        # Indicates if release notes should be automatically generated.
+        generateReleaseNotes: false # optional, default is false
+        # Indicates if the release should be the "latest" release or not.
+        makeLatest: true # optional, default is legacy
+        # An optional name for the release. If this is omitted the tag will be used.
+        ## Indicates if the release body should be omitted.
+        #omitBody: # optional, default is false
+        ## Indicates if the release body should be omitted during updates. The body will still be applied for newly created releases. This will preserve the existing body during updates.
+        #omitBodyDuringUpdate: # optional, default is false
+        ## Indicates if the draft flag should be omitted during updates. The draft flag will still be applied for newly created releases. This will preserve the existing draft state during updates.
+        #omitDraftDuringUpdate: # optional, default is false
+        ## Indicates if the release name should be omitted.
+        #omitName: # optional, default is false
+        ## Indicates if the release name should be omitted during updates. The name will still be applied for newly created releases. This will preserve the existing name during updates.
+        #omitNameDuringUpdate: # optional, default is false
+        ## Indicates if the prerelease flag should be omitted during updates. The prerelease flag will still be applied for newly created releases. This will preserve the existing prerelease state during updates.
+        #omitPrereleaseDuringUpdate: # optional, default is false
+        # Optionally specify the owner of the repo where the release should be generated. Defaults to current repo's owner.
+        # owner: # optional, default is
+        # Optionally marks this release as prerelease. Set to true to enable.
+        prerelease: true # optional, default is
+        # Indicates if existing release artifacts should be removed, Defaults to false.
+        removeArtifacts: false # optional, default is false
+        # Indicates if existing release artifacts should be replaced. Defaults to true.
+        replacesArtifacts: true # optional, default is true
+        # Optionally specify the repo where the release should be generated. Defaults to current repo
+        # repo: # optional, default is
+        # When skipIfReleaseExists is enabled the action will be skipped if a non-draft release already exists for the provided tag.
+        # skipIfReleaseExists: true # optional, default is false
+        # An optional tag for the release. If this is omitted the git ref will be used (if it is a tag).
+        # The Github token.
+        token: ${{ github.token }}
+        # When allowUpdates is enabled, this will fail the action if the release it is updating is not a draft or a prerelease.
+        # updateOnlyUnreleased: # optional, default is false
+
 
   windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
       with:
-        node-version: '12.x'
-    - run: yarn install --frozen-lockfile
+        node-version: '20.x'
+    - run: pnpm install --frozen-lockfile
 
-    - run: yarn test
-    - run: yarn build all
+    - run: pnpm run test
+    - run: pnpm run build --env browsers=all
