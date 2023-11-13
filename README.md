@@ -1,23 +1,23 @@
 # Janky MV3 RES Fork
 
-Forked from honestbleeps/Reddit-Enhancement-Suite, including:
+Forked from [honestbleeps/Reddit-Enhancement-Suite](https://github.com/honestbleeps/Reddit-Enhancement-Suite), including:
 
 * Convert codebase from Flow to TypeScript
 * Upgrade from Webpack 4 to 5
 * Get rid of Babel for bundling, use esbuild instead
-* Merge branch honestbleeps/Reddit-Enhancement-Suite/ghact
-* Merge PR honestbleeps/Reddit-Enhancement-Suite/5475
-* Merge PR honestbleeps/Reddit-Enhancement-Suite/5482
-* Merge PR honestbleeps/Reddit-Enhancement-Suite/5481
-* Merge PR honestbleeps/Reddit-Enhancement-Suite/5480
-* Merge PR honestbleeps/Reddit-Enhancement-Suite/5479
-* Merge PR honestbleeps/Reddit-Enhancement-Suite/5478
-* Merge PR honestbleeps/Reddit-Enhancement-Suite/5476
-* Merge PR honestbleeps/Reddit-Enhancement-Suite/5453
-* Merge branch honestbleeps/Reddit-Enhancement-Suite/dependabot/npm_and_yarn/postcss-8.4.31
-* Merge branch honestbleeps/Reddit-Enhancement-Suite/dependabot/npm_and_yarn/babel/traverse-7.23.2
-* Merge branch honestbleeps/Reddit-Enhancement-Suite/dependabot/npm_and_yarn/browserify-sign-4.2.2
-* Merge PR honestbleeps/Reddit-Enhancement-Suite/5403
+* Merge branch [honestbleeps/Reddit-Enhancement-Suite/ghact](https://github.com/honestbleeps/Reddit-Enhancement-Suite/tree/ghact)
+* Merge PR [honestbleeps/Reddit-Enhancement-Suite/5475](https://github.com/honestbleeps/Reddit-Enhancement-Suite/pull/5475)
+* Merge PR [honestbleeps/Reddit-Enhancement-Suite/5482](https://github.com/honestbleeps/Reddit-Enhancement-Suite/pull/5482)
+* Merge PR [honestbleeps/Reddit-Enhancement-Suite/5481](https://github.com/honestbleeps/Reddit-Enhancement-Suite/pull/5481)
+* Merge PR [honestbleeps/Reddit-Enhancement-Suite/5480](https://github.com/honestbleeps/Reddit-Enhancement-Suite/pull/5480)
+* Merge PR [honestbleeps/Reddit-Enhancement-Suite/5479](https://github.com/honestbleeps/Reddit-Enhancement-Suite/pull/5479)
+* Merge PR [honestbleeps/Reddit-Enhancement-Suite/5478](https://github.com/honestbleeps/Reddit-Enhancement-Suite/pull/5478)
+* Merge PR [honestbleeps/Reddit-Enhancement-Suite/5476](https://github.com/honestbleeps/Reddit-Enhancement-Suite/pull/5476)
+* Merge PR [honestbleeps/Reddit-Enhancement-Suite/5453](https://github.com/honestbleeps/Reddit-Enhancement-Suite/pull/5453)
+* Merge branch [honestbleeps/Reddit-Enhancement-Suite/dependabot/npm_and_yarn/postcss-8.4.31](https://github.com/honestbleeps/Reddit-Enhancement-Suite/tree/dependabot/npm_and_yarn/postcss-8.4.31)
+* Merge branch [honestbleeps/Reddit-Enhancement-Suite/dependabot/npm_and_yarn/babel/traverse-7.23.2](https://github.com/honestbleeps/Reddit-Enhancement-Suite/tree/dependabot/npm_and_yarn/babel/traverse-7.23.2)
+* Merge branch [honestbleeps/Reddit-Enhancement-Suite/dependabot/npm_and_yarn/browserify-sign-4.2.2](https://github.com/honestbleeps/Reddit-Enhancement-Suite/tree/dependabot/npm_and_yarn/browserify-sign-4.2.2)
+* Merge PR [honestbleeps/Reddit-Enhancement-Suite/5403](https://github.com/honestbleeps/Reddit-Enhancement-Suite/pull/5403)
 
 ## What works
 
